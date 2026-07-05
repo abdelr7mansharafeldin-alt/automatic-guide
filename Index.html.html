@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سنترال شرف الدين - نظام إدارة فودافون كاش</title>
+    <!-- Google Fonts: Cairo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- App Loader -->
+    <div id="app-loader" class="loader-overlay">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">جاري تحميل نظام شرف الدين...</div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- LOGIN PAGE -->
+    <div id="login-container" class="login-wrapper">
+        <div class="login-card">
+            <div class="login-logo-container">
+                <div class="login-logo">
+                    <img src="logo.jpg" alt="شعار شرف الدين" class="logo-img-login">
+                </div>
+                <h2>سنترال شرف الدين</h2>
+                <p>نظام إدارة فودافون كاش المتكامل</p>
+            </div>
+            
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-username"><i data-lucide="user"></i> اسم المستخدم</label>
+                    <input type="text" id="login-username" placeholder="أدخل اسم المستخدم" required autocomplete="username">
+                </div>
+                
+                <div class="form-group">
+                    <label for="login-password"><i data-lucide="lock"></i> كلمة المرور</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="login-password" placeholder="أدخل كلمة المرور" required autocomplete="current-password">
+                        <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('login-password')">
+                            <i data-lucide="eye" id="login-password-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="form-row-checkbox">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="login-remember">
+                        <span class="checkmark"></span>
+                        تذكرني على هذا الجهاز
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block" id="login-submit-btn">
+                    <span>تسجيل الدخول</span>
+                    <i data-lucide="log-in"></i>
+                </button>
+            </form>
+            
+            <div class="login-footer">
+                <p>الحساب الافتراضي للمدير: admin / admin12345</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP LAYOUT (hidden by default until login) -->
+    <div id="app-container" class="app-layout" style="display: none;">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="logo.jpg" alt="شعار شرف الدين" class="logo-img-sidebar">
+                </div>
+                <div class="sidebar-title-info">
+                    <h3>سنترال شرف الدين</h3>
+                    <span>إدارة فودافون كاش</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-menu">
+                <a href="#" class="menu-item active" data-page="dashboard" onclick="navigateTo('dashboard')">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>لوحة التحكم</span>
+                </a>
+                <a href="#" class="menu-item" data-page="new-operation" onclick="navigateTo('new-operation')">
+                    <i data-lucide="plus-circle"></i>
+                    <span>عملية جديدة</span>
+                </a>
+                <a href="#" class="menu-item" data-page="history" onclick="navigateTo('history')">
+                    <i data-lucide="history"></i>
+                    <span>سجل العمليات</span>
+                </a>
+                <a href="#" class="menu-item" data-page="accounts" onclick="navigateTo('accounts')">
+                    <i data-lucide="wallet"></i>
+                    <span>حسابات فودافون</span>
+                </a>
+                <a href="#" class="menu-item" data-page="reports" onclick="navigateTo('reports')">
+                    <i data-lucide="bar-chart-3"></i>
+                    <span>التقارير والإحصائيات</span>
+                </a>
+                <a href="#" class="menu-item" data-page="employees" onclick="navigateTo('employees')">
+                    <i data-lucide="users"></i>
+                    <span>شؤون الموظفين</span>
+                </a>
+                <a href="#" class="menu-item" data-page="backup" onclick="navigateTo('backup')">
+                    <i data-lucide="database"></i>
+                    <span>النسخ الاحتياطي</span>
+                </a>
+                <a href="#" class="menu-item" data-page="settings" onclick="navigateTo('settings')">
+                    <i data-lucide="settings"></i>
+                    <span>إعدادات النظام</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="current-user-info">
+                    <div class="user-avatar">
+                        <i data-lucide="user-check"></i>
+                    </div>
+                    <div class="user-text-details">
+                        <span id="nav-user-name">المدير العام</span>
+                        <span id="nav-user-role">مسؤول</span>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="logout()" title="تسجيل الخروج">
+                    <i data-lucide="log-out"></i>
+                    <span>تسجيل الخروج</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="main-content">
+            <!-- TOP HEADER -->
+            <header class="top-header">
+                <div class="header-right-side">
+                    <button class="sidebar-toggle-btn" onclick="toggleSidebar()">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <!-- Global Search Bar -->
+                    <div class="global-search-wrapper">
+                        <i data-lucide="search" class="search-icon"></i>
+                        <input type="text" id="global-search-input" placeholder="بحث سريع (زبون، هاتف، حساب، مبلغ...)" oninput="handleGlobalSearch(this.value)">
+                        <div id="global-search-results" class="search-results-dropdown"></div>
+                    </div>
+                </div>
+
+                <div class="header-left-side">
+                    <!-- Shortcuts & Utilities -->
+                    <div class="utility-buttons">
+                        <button class="util-btn" onclick="openCalculator()" title="الآلة الحاسبة">
+                            <i data-lucide="calculator"></i>
+                        </button>
+                        <button class="util-btn" onclick="openQuickOperation()" title="عملية سريعة">
+                            <i data-lucide="zap"></i>
+                        </button>
+                        <button class="util-btn theme-toggle" onclick="toggleTheme()" title="تغيير المظهر">
+                            <i data-lucide="sun" id="theme-icon-light"></i>
+                            <i data-lucide="moon" id="theme-icon-dark" style="display:none;"></i>
+                        </button>
+                    </div>
+
+                    <!-- Date & Time -->
+                    <div class="header-datetime">
+                        <span id="header-time">12:00:00 م</span>
+                        <span id="header-date">5 يوليو 2026</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- PAGES WRAPPER -->
+            <div class="page-content-wrapper">
+                
+                <!-- ==========================================
+                     PAGE: DASHBOARD
+                     ========================================== -->
+                <section id="page-dashboard" class="page-section active">
+                    <!-- Daily Status Notification / Closing Status -->
+                    <div class="closing-banner card" id="closing-status-banner">
+                        <div class="banner-right">
+                            <i data-lucide="info" class="banner-icon-blue"></i>
+                            <div>
+                                <h4 id="closing-banner-title">اليوم المالي مفتوح</h4>
+                                <p id="closing-banner-desc">رصيد البداية مسجل وجاري تتبع العمليات حالياً.</p>
+                            </div>
+                        </div>
+                        <div class="banner-left">
+                            <button class="btn btn-success" onclick="openClosingModal()">
+                                <i data-lucide="lock"></i>
+                                <span>إقفال اليوم المالي (تصفية)</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- STATS CARDS -->
+                    <div class="stats-grid">
+                        <div class="stat-card blue">
+                            <div class="stat-card-header">
+                                <span>عمليات اليوم</span>
+                                <div class="stat-card-icon"><i data-lucide="arrow-left-right"></i></div>
+                            </div>
+                            <h2 id="stat-today-ops">0</h2>
+                            <p class="stat-subtitle">إجمالي عدد الحركات اليوم</p>
+                        </div>
+                        
+                        <div class="stat-card green">
+                            <div class="stat-card-header">
+                                <span>عمولات اليوم</span>
+                                <div class="stat-card-icon"><i data-lucide="percent"></i></div>
+                            </div>
+                            <h2 id="stat-today-comm">0.00 <span class="currency">ج.م</span></h2>
+                            <p class="stat-subtitle">عمولات مضافة يدوياً</p>
+                        </div>
+
+                        <div class="stat-card green-dark">
+                            <div class="stat-card-header">
+                                <span>أرباح اليوم الصافية</span>
+                                <div class="stat-card-icon"><i data-lucide="trending-up"></i></div>
+                            </div>
+                            <h2 id="stat-today-profit">0.00 <span class="currency">ج.م</span></h2>
+                            <p class="stat-subtitle">مجموع العمولات اليومية</p>
+                        </div>
+
+                        <div class="stat-card navy">
+                            <div class="stat-card-header">
+                                <span>الكاش المتوفر بالمحافظ</span>
+                                <div class="stat-card-icon"><i data-lucide="banknote"></i></div>
+                            </div>
+                            <h2 id="stat-current-cash">0.00 <span class="currency">ج.م</span></h2>
+                            <p class="stat-subtitle">إجمالي أرصدة المحافظ النشطة</p>
+                        </div>
+
+                        <div class="stat-card cyan">
+                            <div class="stat-card-header">
+                                <span>المحافظ النشطة</span>
+                                <div class="stat-card-icon"><i data-lucide="wallet"></i></div>
+                            </div>
+                            <h2 id="stat-accounts-count">0</h2>
+                            <p class="stat-subtitle">إجمالي حسابات فودافون كاش</p>
+                        </div>
+
+                        <div class="stat-card gold">
+                            <div class="stat-card-header">
+                                <span>الموظف الأكثر نشاطاً</span>
+                                <div class="stat-card-icon"><i data-lucide="award"></i></div>
+                            </div>
+                            <h2 id="stat-top-employee">لا يوجد</h2>
+                            <p class="stat-subtitle">صاحب أكبر عدد حركات اليوم</p>
+                        </div>
+                    </div>
+
+                    <!-- CHARTS & RECENT OPERATIONS -->
+                    <div class="dashboard-row">
+                        <!-- Chart 1: Daily Operations -->
+                        <div class="card flex-1">
+                            <div class="card-header">
+                                <h3><i data-lucide="trending-up"></i> إحصائيات العمليات والأرباح (آخر 7 أيام)</h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="dailyOpsChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <!-- Chart 2: Monthly Profit -->
+                        <div class="card flex-1">
+                            <div class="card-header">
+                                <h3><i data-lucide="bar-chart-2"></i> صافي الأرباح الشهرية</h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="monthlyProfitChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-row">
+                        <!-- Recent Operations Table -->
+                        <div class="card w-full">
+                            <div class="card-header-flex">
+                                <h3><i data-lucide="clock"></i> آخر العمليات التي تمت اليوم</h3>
+                                <button class="btn btn-outline btn-sm" onclick="navigateTo('history')">عرض السجل بالكامل</button>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>رقم العملية</th>
+                                            <th>الوقت</th>
+                                            <th>الموظف</th>
+                                            <th>الزبون</th>
+                                            <th>رقم الهاتف</th>
+                                            <th>الحساب</th>
+                                            <th>نوع العملية</th>
+                                            <th>المبلغ</th>
+                                            <th>العمولة</th>
+                                            <th>إجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dashboard-recent-ops-tbody">
+                                        <!-- Dynamically generated -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==========================================
+                     PAGE: NEW OPERATION
+                     ========================================== -->
+                <section id="page-new-operation" class="page-section">
+                    <div class="page-title-header">
+                        <h2><i data-lucide="plus-circle"></i> تسجيل عملية فودافون كاش جديدة</h2>
+                        <p>يرجى إدخال تفاصيل العملية بدقة. سيتم تحديث رصيد المحفظة المحددة تلقائياً فور الحفظ.</p>
+                    </div>
+
+                    <div class="operation-grid">
+                        <!-- Operation Form -->
+                        <div class="card flex-2">
+                            <form id="new-op-form">
+                                <div class="form-row">
+                                    <div class="form-group flex-1">
+                                        <label for="op-employee"><i data-lucide="user"></i> الموظف القائم بالعملية</label>
+                                        <input type="text" id="op-employee" readonly class="input-readonly">
+                                    </div>
+                                    <div class="form-group flex-1">
+                                        <label for="op-date-time"><i data-lucide="calendar"></i> التاريخ والوقت</label>
+                                        <input type="text" id="op-date-time" readonly class="input-readonly">
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group flex-1">
+                                        <label for="op-customer-name"><i data-lucide="user-cog"></i> اسم العميل (اختياري)</label>
+                                        <input type="text" id="op-customer-name" placeholder="مثال: أحمد محمد علي">
+                                    </div>
+                                    <div class="form-group flex-1">
+                                        <label for="op-customer-phone"><i data-lucide="phone"></i> رقم العميل (فودافون كاش)</label>
+                                        <input type="text" id="op-customer-phone" placeholder="مثال: 01012345678" required pattern="010[0-9]{8}">
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group flex-1">
+                                        <label for="op-account-select"><i data-lucide="wallet"></i> محفظة فودافون كاش المستخدمة</label>
+                                        <select id="op-account-select" required onchange="updateSelectedAccountBalance()">
+                                            <!-- Dynamically filled with active accounts -->
+                                        </select>
+                                        <span class="account-balance-indicator" id="selected-acc-bal-indicator">الرصيد المتوفر: 0.00 ج.م</span>
+                                    </div>
+                                    
+                                    <div class="form-group flex-1">
+                                        <label for="op-type-select"><i data-lucide="layers"></i> نوع العملية</label>
+                                        <select id="op-type-select" required onchange="handleOpTypeChange()">
+                                            <option value="withdrawal">سحب كاش (من العميل للمحفظة)</option>
+                                            <option value="deposit">إيداع كاش (من المحفظة للعميل)</option>
+                                            <option value="transfer">تحويل رصيد (إلى رقم فودافون كاش آخر)</option>
+                                            <option value="bill_payment">دفع فواتير / شحن كروت</option>
+                                            <option value="inquiry">استعلام عن رصيد</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group flex-1">
+                                        <label for="op-amount"><i data-lucide="banknote"></i> قيمة المبلغ (ج.م)</label>
+                                        <input type="number" id="op-amount" step="0.01" min="0" placeholder="أدخل مبلغ العملية" required oninput="calculateSuggestedCommission()">
+                                    </div>
+                                    
+                                    <div class="form-group flex-1">
+                                        <label for="op-commission"><i data-lucide="percent"></i> عمولة السنترال (تعديل يدوي) (ج.م)</label>
+                                        <input type="number" id="op-commission" step="0.01" min="0" placeholder="0.00" required>
+                                        <span class="help-text">أدخل قيمة العمولة يدوياً كما تتقاضاها من الزبون.</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="op-notes"><i data-lucide="file-text"></i> ملاحظات إضافية</label>
+                                    <textarea id="op-notes" rows="3" placeholder="ملاحظات حول العملية، رقم عملية الشبكة، إلخ..."></textarea>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary" id="save-op-btn">
+                                        <i data-lucide="save"></i>
+                                        <span>حفظ وتسجيل العملية</span>
+                                    </button>
+                                    <button type="button" class="btn btn-outline" onclick="resetNewOpForm()">إعادة تعيين الحقول</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Wallet Internal Transfer Panel -->
+                        <div class="card flex-1">
+                            <div class="card-header">
+                                <h3><i data-lucide="arrow-left-right"></i> تحويل كاش بين المحافظ الداخلية</h3>
+                                <p class="card-subtitle">تُستخدم لنقل الكاش والرصيد من محفظة فودافون إلى محفظة فودافون أخرى تابعة للسنترال دون عمولات خارجية.</p>
+                            </div>
+                            
+                            <form id="internal-transfer-form">
+                                <div class="form-group">
+                                    <label for="transfer-from-select"><i data-lucide="log-out"></i> المحفظة المصدر (يخصم منها)</label>
+                                    <select id="transfer-from-select" required onchange="updateTransferFromBalance()">
+                                        <!-- Options filled dynamically -->
+                                    </select>
+                                    <span class="account-balance-indicator" id="transfer-from-bal-indicator">الرصيد: 0.00 ج.م</span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="transfer-to-select"><i data-lucide="log-in"></i> المحفظة الوجهة (يضاف إليها)</label>
+                                    <select id="transfer-to-select" required>
+                                        <!-- Options filled dynamically -->
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="transfer-amount"><i data-lucide="banknote"></i> قيمة المبلغ المراد تحويله (ج.م)</label>
+                                    <input type="number" id="transfer-amount" step="0.01" min="0.01" placeholder="مثال: 500" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="transfer-notes"><i data-lucide="file-text"></i> سبب التحويل</label>
+                                    <input type="text" id="transfer-notes" placeholder="مثال: موازنة الأرصدة اليومية">
+                                </div>
+
+                                <button type="submit" class="btn btn-success btn-block">
+                                    <i data-lucide="arrow-left-right"></i>
+                                    <span>تنفيذ التحويل الداخلي</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==========================================
+                     PAGE: OPERATIONS HISTORY
+                     ========================================== -->
+                <section id="page-history" class="page-section">
+                    <div class="page-title-header">
+                        <h2><i data-lucide="history"></i> سجل العمليات المكتملة</h2>
+                        <p>تصفح وتصفية عمليات فودافون كاش السابقة، طباعة الفواتير، وتعديل الملاحظات أو حذف العمليات.</p>
+                    </div>
+
+                    <!-- Filter Card -->
+                    <div class="card mb-20">
+                        <div class="card-header">
+                            <h3><i data-lucide="sliders-horizontal"></i> أدوات التصفية والبحث المتقدم</h3>
+                        </div>
+                        <div class="filter-grid">
+                            <div class="form-group">
+                                <label for="filter-search">بحث نصي</label>
+                                <input type="text" id="filter-search" placeholder="ابحث باسم العميل أو رقمه أو العملية...">
+                            </div>
+                            <div class="form-group">
+                                <label for="filter-date">التاريخ</label>
+                                <input type="date" id="filter-date">
+                            </div>
+                            <div class="form-group">
+                                <label for="filter-employee">الموظف</label>
+                                <select id="filter-employee">
+                                    <option value="">جميع الموظفين</option>
+                                    <!-- Dynamic -->
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="filter-account">المحفظة</label>
+                                <select id="filter-account">
+                                    <option value="">جميع المحافظ</option>
+                                    <!-- Dynamic -->
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="filter-type">نوع العملية</label>
+                                <select id="filter-type">
+                                    <option value="">جميع الأنواع</option>
+                                    <option value="withdrawal">سحب كاش</option>
+                                    <option value="deposit">إيداع كاش</option>
+                                    <option value="transfer">تحويل رصيد</option>
+                                    <option value="bill_payment">دفع فواتير</option>
+                                    <option value="inquiry">استعلام عن رصيد</option>
+                                    <option value="transfer_in">استلام داخلي</option>
+                                    <option value="transfer_out">تحويل داخلي</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="filter-actions mt-15">
+                            <button class="btn btn-primary btn-sm" onclick="applyHistoryFilters()">
+                                <i data-lucide="search"></i> <span>تطبيق التصفية</span>
+                            </button>
+                            <button class="btn btn-outline btn-sm" onclick="clearHistoryFilters()">
+                                <i data-lucide="x"></i> <span>إعادة تعيين</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Operations Table -->
+                    <div class="card">
+                        <div class="card-header-flex">
+                            <h3><i data-lucide="list-collapse"></i> قائمة العمليات المسجلة</h3>
+                            <div class="header-actions">
+                                <button class="btn btn-outline btn-sm" onclick="exportHistoryToExcel()">
+                                    <i data-lucide="file-spreadsheet"></i> <span>تصدير إكسل</span>
+                                </button>
+                                <button class="btn btn-outline btn-sm" onclick="window.print()">
+                                    <i data-lucide="printer"></i> <span>طباعة السجل الحالي</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table" id="history-table">
+                                <thead>
+                                    <tr>
+                                        <th>رقم العملية</th>
+                                        <th>التاريخ</th>
+                                        <th>الوقت</th>
+                                        <th>الموظف</th>
+                                        <th>الزبون</th>
+                                        <th>الهاتف</th>
+                                        <th>محفظة السنترال</th>
+                                        <th>نوع العملية</th>
+                                        <th>المبلغ</th>
+                                        <th>العمولة</th>
+                                        <th>إجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="history-tbody">
+                                    <!-- Dynamic -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==========================================
+                     PAGE: VODAFONE ACCOUNTS
+                     ========================================== -->
+                <section id="page-accounts" class="page-section">
+                    <div class="page-title-header">
+                        <h2><i data-lucide="wallet"></i> محافظ فودافون كاش الخاصة بالسنترال</h2>
+                        <p>إدارة الحسابات والمحافظ وتتبع الأرصدة النقدية واليومية ومراقبة حالة كل محفظة.</p>
+                    </div>
+
+                    <div class="card mb-20">
+                        <div class="card-header-flex">
+                            <h3>أرصدة المحافظ الإجمالية</h3>
+                            <button class="btn btn-primary btn-sm" onclick="openAddAccountModal()">
+                                <i data-lucide="plus"></i> <span>إضافة محفظة جديدة</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Grid of accounts -->
+                    <div class="accounts-grid" id="accounts-cards-container">
+                        <!-- Dynamically generated cards -->
+                    </div>
+                </section>
+
+                <!-- ==========================================
+                     PAGE: REPORTS
+                     ========================================== -->
+                <section id="page-reports" class="page-section">
+                    <div class="page-title-header">
+                        <h2><i data-lucide="bar-chart-3"></i> التقارير والتحليلات المالية</h2>
+                        <p>توليد تقارير الأداء والمكاسب وعرض إحصائيات الموظفين والمحافظ لفترات زمنية مختلفة.</p>
+                    </div>
+
+                    <!-- Report Filter Card -->
+                    <div class="card mb-20">
+                        <div class="report-tabs">
+                            <button class="tab-btn active" data-report-type="daily" onclick="changeReportTab('daily', this)">تقرير اليوم</button>
+                            <button class="tab-btn" data-report-type="weekly" onclick="changeReportTab('weekly', this)">تقرير الأسبوع</button>
+                            <button class="tab-btn" data-report-type="monthly" onclick="changeReportTab('monthly', this)">تقرير الشهر</button>
+                            <button class="tab-btn" data-report-type="yearly" onclick="changeReportTab('yearly', this)">تقرير السنة</button>
+                            <button class="tab-btn" data-report-type="custom" onclick="changeReportTab('custom', this)">تاريخ مخصص</button>
+                        </div>
+                        
+                        <div class="report-custom-date-row mt-15" id="report-custom-date-container" style="display: none;">
+                            <div class="form-group flex-1">
+                                <label for="report-start-date">من تاريخ</label>
+                                <input type="date" id="report-start-date">
+                            </div>
+                            <div class="form-group flex-1">
+                                <label for="report-end-date">إلى تاريخ</label>
+                                <input type="date" id="report-end-date">
+                            </div>
+                            <button class="btn btn-primary" onclick="generateReport()" style="align-self: flex-end; margin-bottom: 5px;">توليد التقرير</button>
+                        </div>
+                    </div>
+
+                    <!-- Summary Stats for Report -->
+                    <div class="stats-grid">
+                        <div class="stat-card blue">
+                            <div class="stat-card-header">
+                                <span>عدد العمليات الكلي</span>
+                                <div class="stat-card-icon"><i data-lucide="activity"></i></div>
+                            </div>
+                            <h2 id="report-stat-count">0</h2>
+                        </div>
+                        <div class="stat-card green">
+                            <div class="stat-card-header">
+                                <span>إجمالي قيمة العمليات</span>
+                                <div class="stat-card-icon"><i data-lucide="banknote"></i></div>
+                            </div>
+                            <h2 id="report-stat-amount">0.00 <span class="currency">ج.م</span></h2>
+                        </div>
+                        <div class="stat-card green-dark">
+                            <div class="stat-card-header">
+                                <span>إجمالي العمولات المحصلة</span>
+                                <div class="stat-card-icon"><i data-lucide="percent"></i></div>
+                            </div>
+                            <h2 id="report-stat-commission">0.00 <span class="currency">ج.م</span></h2>
+                        </div>
+                        <div class="stat-card navy">
+                            <div class="stat-card-header">
+                                <span>صافي أرباح السنترال</span>
+                                <div class="stat-card-icon"><i data-lucide="trending-up"></i></div>
+                            </div>
+                            <h2 id="report-stat-profit">0.00 <span class="currency">ج.م</span></h2>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-row">
+                        <!-- Top Performers (Employees) -->
+                        <div class="card flex-1">
+                            <div class="card-header">
+                                <h3><i data-lucide="users"></i> إحصائيات الموظفين خلال الفترة</h3>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>الموظف</th>
+                                            <th>عدد العمليات</th>
+                                            <th>حجم التداول</th>
+                                            <th>أرباح العمولات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="report-employee-tbody">
+                                        <!-- Dynamic -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Top Used Accounts -->
+                        <div class="card flex-1">
+                            <div class="card-header">
+                                <h3><i data-lucide="wallet"></i> استخدام المحافظ خلال الفترة</h3>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>المحفظة</th>
+                                            <th>عدد العمليات</th>
+                                            <th>حجم التداول</th>
+                                            <th>العمولات المحققة</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="report-account-tbody">
+                                        <!-- Dynamic -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-20">
+                        <div class="card-header-flex">
+                            <h3>تصدير وطباعة التقارير</h3>
+                        </div>
+                        <div class="flex-row-gap mt-15">
+                            <button class="btn btn-outline" onclick="exportReportToExcel()"><i data-lucide="file-spreadsheet"></i> تصدير التقرير كـ Excel</button>
+                            <button class="btn btn-outline" onclick="printReport()"><i data-lucide="printer"></i> طباعة التقرير كاملاً</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==========================================
+                     PAGE: EMPLOYEES
+                     ========================================== -->
+                <section id="page-employees" class="page-section">
+                    <div class="page-title-header">
+                        <h2><i data-lucide="users"></i> شؤون الموظفين والصلاحيات</h2>
+                        <p>إدارة حسابات الموظفين، تحديد كلمات المرور، تعيين صلاحيات النظام، ومتابعة سجل الدخول.</p>
+                    </div>
+
+                    <div class="operation-grid">
+                        <!-- Add/Edit Employee -->
+                        <div class="card flex-1">
+                            <div class="card-header">
+                                <h3 id="employee-form-title"><i data-lucide="user-plus"></i> إضافة موظف جديد</h3>
+                            </div>
+                            
+                            <form id="employee-form">
+                                <input type="hidden" id="emp-id">
+                                <div class="form-group">
+                                    <label for="emp-name">الاسم بالكامل</label>
+                                    <input type="text" id="emp-name" placeholder="مثال: محمود شرف الدين" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="emp-username">اسم المستخدم (لتسجيل الدخول)</label>
+                                    <input type="text" id="emp-username" placeholder="مثal: mahmoud99" required autocomplete="username">
+                                </div>
+                                <div class="form-group">
+                                    <label for="emp-password">كلمة المرور</label>
+                                    <input type="password" id="emp-password" placeholder="أدخل كلمة المرور" required autocomplete="new-password">
+                                    <span class="help-text" id="emp-password-help">عند تعديل موظف، اترك الحقل فارغاً للاحتفاظ بكلمة المرور الحالية.</span>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group flex-1">
+                                        <label for="emp-role">الرتبة والصلاحية</label>
+                                        <select id="emp-role" onchange="handleRoleChange()">
+                                            <option value="employee">موظف كاشير عادي</option>
+                                            <option value="admin">مدير نظام كامل الصلاحية</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group flex-1">
+                                        <label for="emp-status">حالة الحساب</label>
+                                        <select id="emp-status">
+                                            <option value="active">نشط ومفعل</option>
+                                            <option value="inactive">معطل وموقوف</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>صلاحيات الموظف التفصيلية</label>
+                                    <div class="permissions-checklist">
+                                        <label class="checkbox-container block-chk">
+                                            <input type="checkbox" id="perm-edit-ops" checked>
+                                            <span class="checkmark"></span>
+                                            صلاحية تعديل ملاحظات العمليات والعمولات
+                                        </label>
+                                        <label class="checkbox-container block-chk">
+                                            <input type="checkbox" id="perm-delete-ops">
+                                            <span class="checkmark"></span>
+                                            صلاحية حذف العمليات (تراجع الرصيد)
+                                        </label>
+                                        <label class="checkbox-container block-chk">
+                                            <input type="checkbox" id="perm-manage-users">
+                                            <span class="checkmark"></span>
+                                            إدارة المستخدمين والموظفين الآخرين
+                                        </label>
+                                        <label class="checkbox-container block-chk">
+                                            <input type="checkbox" id="perm-backup">
+                                            <span class="checkmark"></span>
+                                            إدارة قواعد البيانات والنسخ الاحتياطي
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-actions mt-15">
+                                    <button type="submit" class="btn btn-primary" id="save-employee-btn">حفظ الحساب</button>
+                                    <button type="button" class="btn btn-outline" id="cancel-employee-btn" onclick="resetEmployeeForm()" style="display: none;">إلغاء التعديل</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Employees List -->
+                        <div class="card flex-2">
+                            <div class="card-header">
+                                <h3><i data-lucide="list"></i> قائمة حسابات الموظفين الحالية</h3>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>الاسم</th>
+                                            <th>اسم المستخدم</th>
+                                            <th>الرتبة</th>
+                                            <th>الحالة</th>
+                                            <th>إجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="employees-tbody">
+                                        <!-- Dynamic -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="card-header mt-20">
+                                <h3><i data-lucide="log-in"></i> سجل الدخول الأخير للنظام</h3>
+                            </div>
+                            <div class="table-responsive max-h-300">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>الموظف</th>
+                                            <th>تاريخ الدخول</th>
+                                            <th>عنوان IP</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="login-history-tbody">
+                                        <!-- Dynamic -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==========================================
+                     PAGE: BACKUP
+                     ========================================== -->
+                <section id="page-backup" class="page-section">
+                    <div class="page-title-header">
+                        <h2><i data-lucide="database"></i> النسخ الاحتياطي وإدارة البيانات</h2>
+                        <p>تأمين بيانات السنترال بشكل دوري وحفظ النسخ الاحتياطية لقاعدة البيانات للرجوع إليها في أي وقت.</p>
+                    </div>
+
+                    <div class="operation-grid">
+                        <div class="card flex-1">
+                            <div class="card-header">
+                                <h3><i data-lucide="shield-check"></i> النسخ الاحتياطي اليدوي والتلقائي</h3>
+                            </div>
+                            <p class="mb-15">يقوم النظام بحفظ كافة العمليات والحسابات داخل ملف SQLite آمن. يوصى بعمل نسخة احتياطية يومياً في نهاية العمل ونقلها لوحدة تخزين خارجية.</p>
+                            
+                            <div class="flex-column-gap">
+                                <button class="btn btn-primary" onclick="runManualBackup()">
+                                    <i data-lucide="copy"></i>
+                                    <span>إنشاء نسخة احتياطية فوراً</span>
+                                </button>
+                                
+                                <div class="backup-info-box mt-15">
+                                    <strong>مجلد الحفظ الافتراضي:</strong>
+                                    <code id="backup-folder-display">backups/</code>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card flex-2">
+                            <div class="card-header">
+                                <h3><i data-lucide="rotate-ccw"></i> استعادة البيانات من نسخة احتياطية</h3>
+                                <p class="card-subtitle">تنبيه: استعادة نسخة قديمة سيؤدي إلى استبدال البيانات الحالية بشكل كامل. يرجى الحذر.</p>
+                            </div>
+                            
+                            <div class="alert alert-warning mb-15">
+                                <i data-lucide="alert-triangle"></i>
+                                <span>سيتم إغلاق التطبيق مؤقتاً عند نجاح الاستعادة لإعادة تحميل قاعدة البيانات.</span>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>اسم الملف</th>
+                                            <th>إجراء</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="backups-list-tbody">
+                                        <!-- Generated from local backup list -->
+                                        <tr>
+                                            <td colspan="2" class="text-center">اضغط على زر النسخ الاحتياطي لإنشاء أول نسخة.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==========================================
+                     PAGE: SETTINGS
+                     ========================================== -->
+                <section id="page-settings" class="page-section">
+                    <div class="page-title-header">
+                        <h2><i data-lucide="settings"></i> إعدادات النظام وتخصيص السنترال</h2>
+                        <p>تحديث اسم المحل، تغيير شعار السنترال، تعديل إعدادات الحساب وتخصيص المظهر العام للنظام.</p>
+                    </div>
+
+                    <div class="operation-grid">
+                        <div class="card flex-1">
+                            <div class="card-header">
+                                <h3><i data-lucide="store"></i> إعدادات السنترال العامة</h3>
+                            </div>
+                            <form id="settings-general-form">
+                                <div class="form-group">
+                                    <label for="set-shop-name">اسم المحل / السنترال</label>
+                                    <input type="text" id="set-shop-name" value="سنترال شرف الدين" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="set-logo-url">رابط الشعار أو لوجو المحل</label>
+                                    <input type="text" id="set-logo-url" placeholder="رابط URL للصورة أو اترك فارغاً">
+                                </div>
+                                <div class="form-group">
+                                    <label for="set-backup-folder">مجلد النسخ الاحتياطية</label>
+                                    <input type="text" id="set-backup-folder" value="backups" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">حفظ الإعدادات العامة</button>
+                            </form>
+                        </div>
+
+                        <div class="card flex-1">
+                            <div class="card-header">
+                                <h3><i data-lucide="shield-alert"></i> تغيير كلمة مرور المدير (admin)</h3>
+                            </div>
+                            <form id="settings-password-form">
+                                <div class="form-group">
+                                    <label for="admin-new-pass">كلمة المرور الجديدة</label>
+                                    <input type="password" id="admin-new-pass" placeholder="أدخل كلمة مرور جديدة قوية" required autocomplete="new-password">
+                                </div>
+                                <div class="form-group">
+                                    <label for="admin-confirm-pass">تأكيد كلمة المرور الجديدة</label>
+                                    <input type="password" id="admin-confirm-pass" placeholder="أعد إدخال كلمة المرور" required autocomplete="new-password">
+                                </div>
+                                <button type="submit" class="btn btn-success">تحديث كلمة المرور</button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL: ADD/EDIT ACCOUNT -->
+    <div id="account-modal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="account-modal-title">إضافة محفظة فودافون كاش جديدة</h3>
+                <button class="modal-close-btn" onclick="closeAccountModal()">&times;</button>
+            </div>
+            <form id="account-modal-form">
+                <input type="hidden" id="modal-acc-id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="modal-acc-name">اسم صاحب المحفظة / اسم التمييز</label>
+                        <input type="text" id="modal-acc-name" placeholder="مثال: شرف الدين رئيسي 1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-acc-phone">رقم الهاتف (رقم فودافون كاش)</label>
+                        <input type="text" id="modal-acc-phone" placeholder="مثال: 010xxxxxxxx" required pattern="010[0-9]{8}">
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-acc-wallet">رقم المحفظة (الرقم التعريفي للمحفظة)</label>
+                        <input type="text" id="modal-acc-wallet" placeholder="مثال: 010xxxxxxxx" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group flex-1">
+                            <label for="modal-acc-balance">الرصيد الحالي المتوفر (ج.م)</label>
+                            <input type="number" id="modal-acc-balance" step="0.01" min="0" placeholder="0.00" required>
+                        </div>
+                        <div class="form-group flex-1">
+                            <label for="modal-acc-daily">الرصيد الافتتاحي اليومي (ج.م)</label>
+                            <input type="number" id="modal-acc-daily" step="0.01" min="0" placeholder="0.00" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-acc-status">حالة المحفظة</label>
+                        <select id="modal-acc-status">
+                            <option value="active">نشطة ومفعلة للعمليات</option>
+                            <option value="inactive">معطلة مؤقتاً</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-acc-notes">ملاحظات عن المحفظة</label>
+                        <textarea id="modal-acc-notes" rows="2" placeholder="ملاحظات حول حدود السحب والعمل أو الغرض من المحفظة"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="modal-acc-submit-btn">إضافة المحفظة</button>
+                    <button type="button" class="btn btn-outline" onclick="closeAccountModal()">إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: PRINT RECEIPT -->
+    <div id="receipt-modal" class="modal-overlay">
+        <div class="receipt-print-wrapper" id="printable-receipt-container">
+            <!-- Receipt content (styled strictly for receipt printers) -->
+            <div class="receipt-header">
+                <h2>سنترال شرف الدين</h2>
+                <p>إدارة فودافون كاش والخدمات المالية</p>
+                <div class="divider-stars">* * * * * * * * * * * * *</div>
+            </div>
+            
+            <div class="receipt-body">
+                <table class="receipt-table">
+                    <tr>
+                        <td>رقم العملية:</td>
+                        <td id="rec-number" class="bold">OP-000000</td>
+                    </tr>
+                    <tr>
+                        <td>التاريخ والوقت:</td>
+                        <td id="rec-datetime">2026-07-05 12:00</td>
+                    </tr>
+                    <tr>
+                        <td>الموظف المسؤول:</td>
+                        <td id="rec-employee">أحمد</td>
+                    </tr>
+                    <tr class="divider-row"><td colspan="2"><hr></td></tr>
+                    <tr>
+                        <td>اسم العميل:</td>
+                        <td id="rec-cust-name">زبون كاش</td>
+                    </tr>
+                    <tr>
+                        <td>رقم هاتف العميل:</td>
+                        <td id="rec-cust-phone" class="bold">010xxxxxxxx</td>
+                    </tr>
+                    <tr>
+                        <td>نوع العملية:</td>
+                        <td id="rec-type" class="bold">إيداع كاش</td>
+                    </tr>
+                    <tr class="divider-row"><td colspan="2"><hr></td></tr>
+                    <tr class="total-row">
+                        <td>المبلغ الإجمالي:</td>
+                        <td id="rec-amount" class="bold size-16">0.00 ج.م</td>
+                    </tr>
+                    <tr>
+                        <td>العمولة المدفوعة:</td>
+                        <td id="rec-commission">0.00 ج.م</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="receipt-footer">
+                <div class="divider-stars">* * * * * * * * * * * * *</div>
+                <p>شكراً لتعاملكم معنا!</p>
+                <p>سنترال شرف الدين يرحب بكم دائماً</p>
+                <div class="receipt-actions no-print">
+                    <button class="btn btn-primary btn-sm" onclick="triggerReceiptPrint()"><i data-lucide="printer"></i> طباعة الآن</button>
+                    <button class="btn btn-outline btn-sm" onclick="closeReceiptModal()">إغلاق</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: CLOSING DAY (Tops & Details) -->
+    <div id="closing-modal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>إغلاق اليوم المالي وتسوية الصندوق</h3>
+                <button class="modal-close-btn" onclick="closeClosingModal()">&times;</button>
+            </div>
+            <form id="closing-form">
+                <div class="modal-body">
+                    <div class="alert alert-warning mb-15">
+                        <i data-lucide="alert-triangle"></i>
+                        <span>عند إتمام الإقفال، سيتم حفظ الأرصدة الحالية كرصيد افتتاح لليوم القادم وتصفير إحصائيات اليوم الحالي.</span>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group flex-1">
+                            <label>تاريخ الإقفال</label>
+                            <input type="text" id="close-date" readonly class="input-readonly">
+                        </div>
+                        <div class="form-group flex-1">
+                            <label>عدد العمليات اليوم</label>
+                            <input type="text" id="close-ops-count" readonly class="input-readonly">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group flex-1">
+                            <label>الرصيد الافتتاحي (ج.م)</label>
+                            <input type="text" id="close-opening-bal" readonly class="input-readonly">
+                        </div>
+                        <div class="form-group flex-1">
+                            <label>الرصيد الفعلي المتوقع بالمحافظ (ج.م)</label>
+                            <input type="text" id="close-expected-bal" readonly class="input-readonly">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group flex-1">
+                            <label>إجمالي عمولات اليوم (الأرباح) (ج.م)</label>
+                            <input type="text" id="close-comm-total" readonly class="input-readonly">
+                        </div>
+                        <div class="form-group flex-1">
+                            <label for="close-actual-cash">الكاش الفعلي بالدرج (الخزينة) (ج.م)</label>
+                            <input type="number" id="close-actual-cash" step="0.01" min="0" required placeholder="أدخل المبلغ الفعلي بالدرج" oninput="calculateCashDifference()">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>فرق العجز / الزيادة المالي (ج.م)</label>
+                        <input type="text" id="close-diff" readonly class="input-readonly bold">
+                        <span class="help-text" id="close-diff-help"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="close-notes">ملاحظات التصفية</label>
+                        <textarea id="close-notes" rows="2" placeholder="ملاحظات حول فروقات الصندوق أو مشاكل شبكة فودافون كاش اليوم"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">إتمام الإغلاق والطباعة</button>
+                    <button type="button" class="btn btn-outline" onclick="closeClosingModal()">إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- UTILITY: QUICK CALCULATOR WIDGET -->
+    <div id="calculator-widget" class="calc-widget" style="display: none;">
+        <div class="calc-header">
+            <span>آلة حاسبة سريعة</span>
+            <button onclick="closeCalculator()">&times;</button>
+        </div>
+        <div class="calc-body">
+            <input type="text" id="calc-screen" readonly>
+            <div class="calc-keys">
+                <button onclick="calcClear()" class="key-red">C</button>
+                <button onclick="calcInput('/')">/</button>
+                <button onclick="calcInput('*')">*</button>
+                <button onclick="calcBack()">←</button>
+                
+                <button onclick="calcInput('7')">7</button>
+                <button onclick="calcInput('8')">8</button>
+                <button onclick="calcInput('9')">9</button>
+                <button onclick="calcInput('-')">-</button>
+                
+                <button onclick="calcInput('4')">4</button>
+                <button onclick="calcInput('5')">5</button>
+                <button onclick="calcInput('6')">6</button>
+                <button onclick="calcInput('+')">+</button>
+                
+                <button onclick="calcInput('1')">1</button>
+                <button onclick="calcInput('2')">2</button>
+                <button onclick="calcInput('3')">3</button>
+                <button onclick="calcEqual()" class="key-equal">=</button>
+                
+                <button onclick="calcInput('0')" class="key-zero">0</button>
+                <button onclick="calcInput('.')">.</button>
+            </div>
+            
+            <hr class="calc-divider">
+            <div class="calc-profit-helper">
+                <span>حاسبة عمولة الإيداع المقترحة:</span>
+                <div class="flex-row-gap mt-5">
+                    <input type="number" id="calc-helper-amount" placeholder="المبلغ" class="helper-input" oninput="calcSuggestedCommHelper()">
+                    <span id="calc-helper-result" class="helper-result">عمولة: 0 ج.م</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- UTILITY: QUICK OPERATION MODAL -->
+    <div id="quick-op-modal" class="modal-overlay">
+        <div class="modal-card modal-sm">
+            <div class="modal-header">
+                <h3>إجراء عملية سريعة</h3>
+                <button class="modal-close-btn" onclick="closeQuickOperation()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-15">اختر العملية السريعة للانتقال المباشر وتجهيز الحقول:</p>
+                <div class="quick-op-actions">
+                    <button class="btn btn-primary btn-block" onclick="triggerQuickAction('deposit')">
+                        <i data-lucide="arrow-up-right"></i> <span>إيداع كاش سريع لزبون</span>
+                    </button>
+                    <button class="btn btn-success btn-block" onclick="triggerQuickAction('withdrawal')">
+                        <i data-lucide="arrow-down-left"></i> <span>سحب كاش سريع من زبون</span>
+                    </button>
+                    <button class="btn btn-outline btn-block" onclick="triggerQuickAction('transfer')">
+                        <i data-lucide="send"></i> <span>تحويل رصيد سريع</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
